@@ -1,22 +1,19 @@
 # VELVET CRUMB
 
-A scroll-controlled chocolate atelier portfolio study built with React, Vite, React Three Fiber, Three.js and GSAP.
+A chocolate atelier portfolio study built with React, Vite, React Three Fiber, Three.js and GSAP.
 
 ```sh
 npm ci
 npm run dev
+npm test
 npm run build
 npm run preview
 ```
 
-The rebuild replaces disconnected photo sections with a single sticky 3D stage, a real geometric cake wedge, seven scroll chapters, and a functional four-option product configuration and demo bag. It uses local procedural textures, system fonts and local lights; no runtime CDN dependency is required.
+The current visual review focuses on the hero and cake-cutting scenes. An original Blender-authored GLB includes textured sponge, cream, modeled ganache drips, piped chocolate, thin shavings and gold leaf. Camera, slice and chapter text share a reversible scroll timeline; the scene renders on demand and uses a local softbox reflection environment. The product configuration and demo bag are retained. All visual assets are local; no runtime CDN is required.
 
-**Visual status:** this is an improved procedural cinematic prototype, not a finished photorealistic commercial. Cutting uses real geometry, but authored cutting/crumb animation, fluids, rising cake, frosting, and realistic packaging still need production assets. See [the audit and scene-by-scene production plan](docs/PRODUCTION.md). Configuration changes update demo prices and bag items, not the 3D material/geometry.
+**Visual status:** this is a look-development candidate, not approved photorealism. A suitable CC0 scan has been researched but cannot yet be downloaded under the environment's host allowlist. The cut still needs an authored blade, realistic fracture/crumb detail and interior refinement. See [asset production, provenance and reproduction](docs/ASSET_PRODUCTION.md) and [verification notes](docs/QA.md).
 
-## Cloudflare Workers
+Later mixing, baking, frosting and packaging studies are archived in source and withheld from the current presentation until hero/cutting approval. The project is a portfolio demonstration; no checkout or payment is processed.
 
-Build with `npm run build`, then deploy using your authorized Cloudflare account with `npx wrangler deploy`. The existing `wrangler.jsonc` serves `dist/`. No server secrets or runtime API calls are required. Do not deploy or merge this review branch before review.
-
-## Checks
-
-`npm run build` validates the client bundle. `npm test` verifies pricing for the demo configurations. Browser QA covers production rendering, chapter scrubbing, desktop/mobile overflow, all four options, add/remove bag, Escape dismissal and reduced motion; see `docs/QA.md` for observed results and limitations.
+The existing `wrangler.jsonc` remains compatible with static `dist/` output. Do not deploy or merge this review branch before approval.

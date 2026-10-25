@@ -13,7 +13,7 @@ import {
 import { priceFor, defaultSelection, options } from "./product.js";
 gsap.registerPlugin(ScrollTrigger);
 const Scene = lazy(() => import("./Scene.jsx"));
-const chapterStarts = [0, 0.10, 0.26, 0.36, 0.51, 0.65, 0.81];
+const chapterStarts = [0, 0.35];
 const chapters = [
   [
     "THE SIGNATURE",
@@ -57,7 +57,7 @@ const chapters = [
     "deserve a ribbon.",
     "A final flourish. A quiet statement. The pleasure of giving something truly considered.",
   ],
-];
+].slice(0, 2);
 class SceneBoundary extends React.Component {
   state = { failed: false };
   static getDerivedStateFromError() {
@@ -106,13 +106,21 @@ function App() {
       const timeline = gsap.timeline({
         onUpdate: () => {
           const value = progress.current;
-          setActive(Math.max(0, chapterStarts.findLastIndex(start => value >= start)));
-          document.documentElement.style.setProperty('--journey', `${value * 100}%`);
+          setActive(
+            Math.max(
+              0,
+              chapterStarts.findLastIndex((start) => value >= start),
+            ),
+          );
+          document.documentElement.style.setProperty(
+            "--journey",
+            `${value * 100}%`,
+          );
         },
         scrollTrigger: {
           trigger: story.current,
-          start: 'top top',
-          end: 'bottom bottom',
+          start: "top top",
+          end: "bottom bottom",
           scrub: reduced ? true : 0.7,
         },
       });
@@ -154,7 +162,8 @@ function App() {
   const jump = (i) => {
     const top =
       story.current.offsetTop +
-      (story.current.offsetHeight - window.innerHeight) * (chapterStarts[i] + 0.015);
+      (story.current.offsetHeight - window.innerHeight) *
+        (chapterStarts[i] + 0.015);
     window.scrollTo({ top, behavior: reduced ? "instant" : "smooth" });
   };
   return (
@@ -194,7 +203,7 @@ function App() {
         ref={story}
         id="home"
         className="journey"
-        aria-label="The seven chapter chocolate journey"
+        aria-label="The signature and cutting experience"
       >
         <div className="stage" id="journey">
           <div
@@ -254,20 +263,18 @@ function App() {
             <button
               className="scroll-invitation"
               onClick={() =>
-                active < 6
+                active < chapters.length - 1
                   ? jump(active + 1)
-                  : document
-                      .getElementById("collection")
-                      .scrollIntoView({
-                        behavior: reduced ? "instant" : "smooth",
-                      })
+                  : document.getElementById("collection").scrollIntoView({
+                      behavior: reduced ? "instant" : "smooth",
+                    })
               }
             >
               <span className="scroll-circle">
                 <ArrowDown size={17} />
               </span>
               <span>
-                SCROLL TO SAVOUR<small>A STORY IN SEVEN CHAPTERS</small>
+                SCROLL TO SAVOUR<small>THE SIGNATURE / THE REVEAL</small>
               </span>
             </button>
             <div className="chapter-nav" aria-label="Journey chapters">

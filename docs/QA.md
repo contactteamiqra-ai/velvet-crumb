@@ -1,21 +1,30 @@
 # Verification — 26 October 2026
 
-## Passed
+## Current hero/cutting asset phase
 
-- `npm run build`: Vite production output generated successfully for Cloudflare Workers static assets.
-- `npm test`: base pricing, premium configuration, and all 54 size/flavor/frosting/topping combinations.
-- `git diff --check`: no whitespace errors.
-- Chromium production preview at 1440×1000 and 390×844: canvas initialization, chapter scrubbing and reverse scrolling; screenshots reviewed during implementation.
-- All four configuration controls: 8 inch + roasted hazelnut + chocolate mousse + gold leaf totals $85.00.
-- Add to bag, matching item total, remove item, dialog Escape, mobile navigation.
-- No mobile horizontal overflow at 390px.
-- Reduced-motion media preference and chapter navigation.
-- Browser checks recorded no uncaught page errors or external HTTP asset requests.
+- `npm test`: six passing tests. Compressed GLB retains independent intact/body/slice groups; crumb, cream and ganache retain normal/roughness maps; slice separation is monotonic and reverses to the exact original pose; all 54 product configurations retain correct pricing.
+- `npm run build`: passes for the existing Cloudflare Workers static assets setup.
+- `git diff --check`: passes.
+- Desktop/mobile Chromium + SwiftShader checks inspect the actual canvas pose, not only the chapter caption. At progress .52 the slice starts moving; at .87 it reaches the separated pose; returning to zero restores `[0,0,0]` exactly.
+- Browser capture targets: 1440×1000 and 390×844, including forward cut, open cut, reverse restoration, mobile overflow, retained customization/add-to-bag. Reduced motion uses direct scrubbing; ordinary motion uses the same absolute pose with GSAP smoothing.
+- Runtime images and decoder are local. GLB texture blob URLs are local embedded images, not external asset requests.
 
-Browser tests ran with installed Chromium and SwiftShader. That verifies software WebGL, not performance on physical phones. Screenshot inspection led to correcting slice translation direction, fitting the cake inside the desktop composition, replacing cuboid toppings with curl geometry, and synchronizing chapter labels to the same timeline value as the canvas.
+## Important limits
 
-## Limits
+The original asset is a visual study, not approved photorealism. Offline Cycles asset renders are not a substitute for the actual browser screenshots. Scanned texture adaptation, realistic cutting/fracture/crumb contact and physical mobile/Safari visual/performance testing remain outstanding. Later production scenes are held pending approval.
 
-The Three.js/R3F lazy chunk remains about 828 kB uncompressed / 222 kB gzip. The initial application chunk is about 276 kB / 98 kB gzip, down from the original single 1160 kB / 339 kB gzip bundle. Vite correctly warns about the lazy chunk size. Mobile caps device pixel ratio at 1.5, but physical device performance and Safari testing remain outstanding.
+The GLB is about 3.42 MB. It contains both intact and cut mesh versions, with only one version visible at a time. The lazy Three.js/R3F/GLTF/Meshopt chunk is about 1.14 MB uncompressed / 343 kB gzip; the initial application chunk is 276 kB / 98 kB gzip. Vite emits a chunk-size warning. On-demand rendering avoids redrawing unchanged frames, and device pixel ratio is capped, but these are not evidence of performance on real phones.
 
-Production assets are not supplied: procedural cutting, mixing, oven, finish and packaging do not establish photorealistic quality or fluid realism. See PRODUCTION.md. No cloud deployment or real checkout was tested. No assets contain humans.
+## Earlier foundation checks retained
+
+The first iteration checked $85 premium configuration pricing, add/remove bag, focus/Escape dismissal, mobile navigation and no horizontal overflow. No payment/checkout or cloud deployment has been tested. No humans appear in the assets or scenes.
+
+## Actual production-browser captures
+
+The final capture run recorded zero uncaught page errors and zero external requests. The open pose at .87 was `[0.4200,-0.0562,0.8600]`; reverse at zero was `[0,0,0]`. Local texture blobs are excluded from external-request counting. Both captures below are the actual WebGL website, not offline Cycles renders.
+
+![Hero — browser](review/hero-browser.png)
+
+![Separated slice — browser](review/cut-browser.png)
+
+![Mobile — browser](review/mobile-browser.png)

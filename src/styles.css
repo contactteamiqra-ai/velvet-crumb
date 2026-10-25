@@ -2,7 +2,7 @@
 :root {
   font-family: Arial, sans-serif;
   color: #eadfce;
-  background: #1b100d;
+  background: #19130f;
   font-synthesis: none;
   --gold: #c6a77b;
   --muted: #ad9784;
@@ -101,7 +101,7 @@ button {
   border: 0;
 }
 .journey {
-  height: 770svh;
+  height: 320svh;
   position: relative;
 }
 .stage {
@@ -110,11 +110,11 @@ button {
   position: sticky;
   top: 0;
   overflow: hidden;
-  background: #1b100d;
+  background: #19130f;
 }
 .stage-art {
   position: absolute;
-  inset: 9% -10% 0 20%;
+  inset: 0 -10% 0 20%;
 }
 .stage-art:after {
   content: "";
@@ -122,14 +122,14 @@ button {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, #1b100d 0%, transparent 28%),
-    linear-gradient(0deg, #1b100d, transparent 16%);
+    linear-gradient(90deg, #19130f 0%, transparent 28%),
+    linear-gradient(0deg, #19130f, transparent 16%);
 }
 .stage-grain {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.17;
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .chapter-top {
@@ -630,8 +630,8 @@ footer {
   }
   .stage-art:after {
     background:
-      linear-gradient(180deg, #1b100d, transparent 20%),
-      linear-gradient(0deg, #1b100d, transparent 14%);
+      linear-gradient(180deg, #19130f, transparent 20%),
+      linear-gradient(0deg, #19130f, transparent 14%);
   }
   .product-note {
     display: none;
@@ -703,7 +703,7 @@ footer {
     gap: 16px;
   }
   .journey {
-    height: 650svh;
+    height: 300svh;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -717,7 +717,7 @@ footer {
     transition: none !important;
   }
   .journey {
-    height: 430svh;
+    height: 240svh;
   }
 }
 

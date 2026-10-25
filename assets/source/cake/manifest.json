@@ -1,0 +1,20 @@
+{
+  "kind": "original Blender look-development asset; not a scanned asset",
+  "authoring": "scripts/assets/author-cake.py",
+  "texture_authoring": "scripts/assets/create-interior.py",
+  "tools": {
+    "Blender": "4.3.2",
+    "glTF Transform": "4.5.1"
+  },
+  "third_party_assets_incorporated": [],
+  "glb_sha256": "d79cbc2a63ed74fd89cff95db5c5af622090821bf5e8ecb6d0a9ccced115cb2f",
+  "glb_bytes": 3415888,
+  "triangles_including_hidden_intact_and_cut_versions": 341117,
+  "visual_status": "Review candidate, not approved photorealism",
+  "prospective_scan": {
+    "url": "https://polyhaven.com/a/strawberry_chocolate_cake",
+    "author": "Kuutti Siitonen / Poly Haven",
+    "license": "CC0-1.0",
+    "downloaded": false
+  }
+}
