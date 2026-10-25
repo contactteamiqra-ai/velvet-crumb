@@ -1,12 +1,486 @@
-import React,{Suspense,useEffect,useRef,useState} from 'react';
-import {Canvas,useFrame} from '@react-three/fiber';
-import {Environment,Float,ContactShadows} from '@react-three/drei';
-import gsap from 'gsap';
-import {ScrollTrigger} from 'gsap/ScrollTrigger';
-import {ArrowDown,ArrowUpRight,ChevronDown,Volume2,VolumeX,Menu,X} from 'lucide-react';
+import React, { Suspense, lazy, useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  Plus,
+  Minus,
+  X,
+  Menu,
+  ShoppingBag,
+} from "lucide-react";
+import { priceFor, defaultSelection, options } from "./product.js";
 gsap.registerPlugin(ScrollTrigger);
-const IMG={slice:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1300&q=85',ingredients:'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=1400&q=85',mix:'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=1300&q=85',bake:'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=1300&q=85',finish:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1500&q=85'};
-function Cake({progress=0}){const group=useRef();useFrame((_,dt)=>{if(group.current)group.current.rotation.y+=dt*.17});const layers=[0,.36,.72];return <group ref={group} position={[0,-.38,0]} rotation={[.08,0,.04]}><mesh position={[0,-.16,0]}><cylinderGeometry args={[2.0,2.0,.17,96]}/><meshStandardMaterial color="#b98c57" metalness={.72} roughness={.2}/></mesh>{layers.map((v,i)=><React.Fragment key={v}><mesh position={[0,v,0]} castShadow><cylinderGeometry args={[1.72,1.72,.32,96]}/><meshStandardMaterial color={i%2?'#5c281d':'#392018'} roughness={.72}/></mesh><mesh position={[0,v+.18,0]} castShadow><cylinderGeometry args={[1.77,1.77,.11,96]}/><meshStandardMaterial color={i===2?'#3e1d17':'#f2d3b4'} roughness={.42}/></mesh></React.Fragment>)}<mesh position={[0,1.01,0]} castShadow><cylinderGeometry args={[1.78,1.78,.14,96]}/><meshStandardMaterial color="#32140f" roughness={.19} metalness={.04}/></mesh>{Array.from({length:12},(_,i)=>{let a=i*Math.PI/6;return <mesh key={i} position={[Math.sin(a)*1.37,1.14,Math.cos(a)*1.37]} scale={[.19,.14,.22]} castShadow><sphereGeometry args={[1,20,16]}/><meshStandardMaterial color={i%3===0?'#ad603a':'#1a0d0a'} roughness={.27}/></mesh>})}<mesh position={[0,1.19,0]}><sphereGeometry args={[.27,32,24]}/><meshStandardMaterial color="#a65a37" roughness={.25}/></mesh></group>}
-function CakeScene(){return <Canvas shadows camera={{position:[0,2.6,7.5],fov:39}} dpr={[1,1.7]} gl={{antialias:true,alpha:true}}><ambientLight intensity={1.35}/><spotLight position={[4,8,6]} intensity={100} angle={.55} penumbra={1} castShadow/><pointLight position={[-5,2,0]} intensity={40} color="#f2a16d"/><Suspense fallback={null}><Float speed={1.1} rotationIntensity={.05} floatIntensity={.14}><Cake/></Float><ContactShadows position={[0,-1.2,0]} opacity={.5} scale={8} blur={2.5} far={4}/><Environment preset="studio"/></Suspense></Canvas>}
-const steps=[{num:'01',eyebrow:'THE FIRST IMPRESSION',title:'A little slice\\nof extraordinary.',copy:'The finest moments deserve the richest chocolate. Watch the signature velvet cake reveal its delicious layers.',image:IMG.slice,button:'Discover the layers'},{num:'02',eyebrow:'NOTHING ORDINARY INSIDE',title:'Only the good\\nstuff goes in.',copy:'Cocoa with depth. Silky cream. Carefully balanced sweetness. Every ingredient earns its place.',image:IMG.ingredients,button:'Meet the ingredients'},{num:'03',eyebrow:'THE MAKING',title:'Whisked into\\nsomething wonderful.',copy:'Pure chocolate, smooth batter, and the kind of patience great cake deserves. No shortcuts, only craft.',image:IMG.mix,button:'Watch it come together'},{num:'04',eyebrow:'THE TRANSFORMATION',title:'A little heat.\\nA lot of magic.',copy:'Into the oven. A gentle rise. Deep, irresistible chocolate aromas imagined in every frame.',image:IMG.bake,button:'The finishing touch'},{num:'05',eyebrow:'THE GRAND FINALE',title:'Dressed to\\nimpress.',copy:'Silky ganache, hand-inspired chocolate details, and a presentation made to be remembered.',image:IMG.finish,button:'The perfect gift'}];
-function App(){const [menu,setMenu]=useState(false),[flavor,setFlavor]=useState('Dark chocolate'),[size,setSize]=useState('6 inch'),[added,setAdded]=useState(false);const hero=useRef();const cost=(size==='6 inch'?38:size==='8 inch'?52:68)+(flavor==='Hazelnut'?6:flavor==='Salted caramel'?4:0);useEffect(()=>{const ctx=gsap.context(()=>{gsap.to('.hero-content',{y:-165,opacity:0,scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}});gsap.utils.toArray('.story-section').forEach(section=>{const elements=section.querySelectorAll('.reveal');gsap.fromTo(elements,{y:65,opacity:0},{y:0,opacity:1,duration:1,stagger:.15,ease:'power2.out',scrollTrigger:{trigger:section,start:'top 75%',toggleActions:'play none none reverse'}});gsap.fromTo(section.querySelector('.story-img'),{scale:1.16},{scale:1,scrollTrigger:{trigger:section,start:'top bottom',end:'bottom top',scrub:true}})});gsap.fromTo('.final-card',{y:90,opacity:0},{y:0,opacity:1,scrollTrigger:{trigger:'.finale',start:'top 65%',end:'top 25%',scrub:1}}) });return ()=>ctx.revert()},[]);return <main><header className="topbar"><a className="brand" href="#home">VELVET <span>CRUMB</span><small>ATELIER DE CHOCOLAT</small></a><nav className={menu?'nav open':'nav'}><a onClick={()=>setMenu(false)} href="#story">Our story</a><a onClick={()=>setMenu(false)} href="#process">The craft</a><a onClick={()=>setMenu(false)} href="#customize">The collection</a></nav><a className="nav-order" href="#customize">EXPLORE CAKES <ArrowUpRight size={15}/></a><button aria-label="Toggle menu" className="mobile-menu" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></header><section id="home" ref={hero} className="hero"><div className="hero-glow"/><span className="hero-ring ring-one"/><span className="hero-ring ring-two"/><div className="hero-content"><div className="eyebrow gold">AN EXPERIENCE WORTH SAVOURING <span>✦</span> EST. 2026</div><h1>Chocolate, <em>reimagined.</em></h1><p>Layers of pleasure. A story in every slice.</p><div className="cake-canvas" aria-label="Rotating stylized 3D chocolate cake"><CakeScene/></div><span className="hero-cake-caption">THE SIGNATURE · NO. 001</span></div><a className="scroll-cue" href="#story">SCROLL TO INDULGE <ArrowDown size={17}/></a><span className="vertical-note">CRAFTED WITH OBSESSION</span></section><section className="marquee" aria-hidden="true"><div>✦ &nbsp; MADE FOR MOMENTS &nbsp; ✦ &nbsp; LAYERS OF LOVE &nbsp; ✦ &nbsp; DECADENT BY DESIGN &nbsp; ✦ &nbsp; MADE FOR MOMENTS &nbsp; ✦ &nbsp; LAYERS OF LOVE &nbsp; ✦ &nbsp; DECADENT BY DESIGN &nbsp;</div></section>{steps.map((s,i)=><section id={i===0?'story':i===2?'process':undefined} className={'story-section '+(i%2?'reverse':'')} key={s.num}><div className="story-image-wrap"><img className="story-img" src={s.image} loading="lazy" alt={s.title.replace('\\n',' ')}/><div className="image-tint"/><span className="image-index">{s.num} / 05</span></div><div className="story-copy"><div className="reveal eyebrow">✦ &nbsp; {s.eyebrow}</div><h2 className="reveal">{s.title.split('\\n').map((line,j)=><React.Fragment key={j}>{j>0&&<br/>}{line}</React.Fragment>)}</h2><div className="hairline reveal"/><p className="reveal">{s.copy}</p><span className="reveal little-ritual">THE VELVET CRUMB RITUAL <span>0{i+1}</span></span></div></section>)}<section className="packaging"><div className="package-label">THE FINAL TOUCH</div><div className="gift"> <div className="gift-lid"/><div className="gift-box"><span>VELVET<br/>CRUMB</span><small>CHOCOLATE ATELIER</small></div><div className="ribbon-v"/><div className="ribbon-h"/></div><h2>Beautifully boxed.<br/><em>Unforgettably yours.</em></h2><p>Every masterpiece deserves a little ceremony.</p></section><section id="customize" className="finale"><div className="final-card"><div className="final-photo"><img src={IMG.finish} alt="Chocolate celebration cake" loading="lazy"/></div><div className="final-details"><div className="eyebrow gold">THE SIGNATURE COLLECTION · 001</div><h2>Your moment.<br/><em>Your cake.</em></h2><p>A chocolate celebration, made entirely your own. Customize your favorite and discover the possibilities.</p><label htmlFor="flavor">CHOOSE YOUR FLAVOUR</label><div className="choice-row">{['Dark chocolate','Hazelnut','Salted caramel'].map(f=><button key={f} className={flavor===f?'selected':''} onClick={()=>{setFlavor(f);setAdded(false)}}>{f}</button>)}</div><label htmlFor="size">SELECT YOUR SIZE</label><div className="choice-row">{['6 inch','8 inch','10 inch'].map(s=><button key={s} className={size===s?'selected':''} onClick={()=>{setSize(s);setAdded(false)}}>{s}</button>)}</div><div className="checkout-line"><div><small>ESTIMATED PRICE</small><strong>${cost}.00</strong></div><button className="primary-cta" onClick={()=>setAdded(true)}>{added?'ADDED TO DEMO BAG ✓':'ADD TO BAG'} <ArrowUpRight size={18}/></button></div><small className="demo-note">Portfolio concept only. No payment or order is processed.</small></div></div></section><footer><div className="footer-brand">VELVET <em>CRUMB</em></div><div className="footer-bottom"><span>© 2026 VELVET CRUMB · A PORTFOLIO EXPERIENCE</span><a href="#home">BACK TO THE TOP ↑</a><span>DESIGNED TO DELIGHT.</span></div></footer></main>};export default App;
+const Scene = lazy(() => import("./Scene.jsx"));
+const chapterStarts = [0, 0.10, 0.26, 0.36, 0.51, 0.65, 0.81];
+const chapters = [
+  [
+    "THE SIGNATURE",
+    "Pleasure,",
+    "in every layer.",
+    "Belgian chocolate. Three impossibly rich layers. One beautiful obsession.",
+  ],
+  [
+    "THE REVEAL",
+    "Made to be",
+    "taken apart.",
+    "A slice draws away. Dark sponge meets a silk-soft chocolate cream; every layer has its moment.",
+  ],
+  [
+    "THE ELEMENTS",
+    "Nothing extra.",
+    "Nothing ordinary.",
+    "Deep cocoa. Cultured butter. Cream. The quiet alchemy of exceptional ingredients.",
+  ],
+  [
+    "THE RITUAL",
+    "A beautiful",
+    "coming together.",
+    "A slow turn of the whisk. Chocolate becomes silk. The beginning of something extraordinary.",
+  ],
+  [
+    "THE TRANSFORMATION",
+    "Time. Warmth.",
+    "A little wonder.",
+    "From a delicate batter to a tender crumb. A transformation worth waiting for.",
+  ],
+  [
+    "THE FINISH",
+    "Layered with",
+    "intention.",
+    "Sponge, cream, ganache. Chocolate upon chocolate, finished with a generous scattering of curls.",
+  ],
+  [
+    "THE CEREMONY",
+    "Some things",
+    "deserve a ribbon.",
+    "A final flourish. A quiet statement. The pleasure of giving something truly considered.",
+  ],
+];
+class SceneBoundary extends React.Component {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? <Fallback /> : this.props.children;
+  }
+}
+function Fallback() {
+  return (
+    <div className="fallback">
+      <span>VC</span>
+      <p>The signature chocolate cake</p>
+      <small>
+        Interactive 3D is unavailable on this device.
+        <br />
+        Explore the story and collection below.
+      </small>
+    </div>
+  );
+}
+function App() {
+  const story = useRef(),
+    progress = useRef(0),
+    [active, setActive] = useState(0),
+    [loaded, setLoaded] = useState(false),
+    [menu, setMenu] = useState(false),
+    [selection, setSelection] = useState(defaultSelection),
+    [bag, setBag] = useState([]),
+    [bagOpen, setBagOpen] = useState(false),
+    [notice, setNotice] = useState("");
+  const [reduced, setReduced] = useState(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const total = priceFor(selection);
+  useEffect(() => {
+    const q = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(q.matches);
+    q.addEventListener("change", update);
+    return () => q.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    progress.current = 0;
+    const ctx = gsap.context(() => {
+      const timeline = gsap.timeline({
+        onUpdate: () => {
+          const value = progress.current;
+          setActive(Math.max(0, chapterStarts.findLastIndex(start => value >= start)));
+          document.documentElement.style.setProperty('--journey', `${value * 100}%`);
+        },
+        scrollTrigger: {
+          trigger: story.current,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: reduced ? true : 0.7,
+        },
+      });
+      timeline.to(progress, { current: 1, ease: "none", duration: 1 });
+    }, story);
+    setLoaded(true);
+    return () => ctx.revert();
+  }, [reduced]);
+  useEffect(() => {
+    if (!bagOpen) return;
+    const prev = document.activeElement;
+    const dialog = document.querySelector(".bag-panel");
+    const focusable = () => [...dialog.querySelectorAll("button,a")];
+    focusable()[0]?.focus();
+    const handle = (e) => {
+      if (e.key === "Escape") setBagOpen(false);
+      if (e.key === "Tab") {
+        const a = focusable(),
+          first = a[0],
+          last = a.at(-1);
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", handle);
+    const old = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handle);
+      document.body.style.overflow = old;
+      prev?.focus();
+    };
+  }, [bagOpen]);
+  const jump = (i) => {
+    const top =
+      story.current.offsetTop +
+      (story.current.offsetHeight - window.innerHeight) * (chapterStarts[i] + 0.015);
+    window.scrollTo({ top, behavior: reduced ? "instant" : "smooth" });
+  };
+  return (
+    <main>
+      <header className="topbar">
+        <a href="#home" className="brand" aria-label="Velvet Crumb home">
+          VELVET CRUMB<span>THE CHOCOLATE ATELIER</span>
+        </a>
+        <nav className={menu ? "nav open" : "nav"} aria-label="Main navigation">
+          <a href="#journey" onClick={() => setMenu(false)}>
+            The experience
+          </a>
+          <a href="#collection" onClick={() => setMenu(false)}>
+            The signature
+          </a>
+        </nav>
+        <div className="header-actions">
+          <button
+            className="bag-button"
+            onClick={() => setBagOpen(true)}
+            aria-label={`Open demo bag, ${bag.length} items`}
+          >
+            <ShoppingBag size={16} />
+            <span>BAG ({bag.length})</span>
+          </button>
+          <button
+            className="menu-button"
+            onClick={() => setMenu(!menu)}
+            aria-expanded={menu}
+            aria-label="Toggle navigation"
+          >
+            {menu ? <X /> : <Menu />}
+          </button>
+        </div>
+      </header>
+      <section
+        ref={story}
+        id="home"
+        className="journey"
+        aria-label="The seven chapter chocolate journey"
+      >
+        <div className="stage" id="journey">
+          <div
+            className="stage-art"
+            aria-label="Scroll-controlled chocolate cake and baking study"
+          >
+            {loaded && (
+              <SceneBoundary>
+                <Suspense
+                  fallback={
+                    <div className="loading">
+                      Preparing the chocolate atelier…
+                    </div>
+                  }
+                >
+                  <Scene progress={progress} reduced={reduced} />
+                </Suspense>
+              </SceneBoundary>
+            )}
+          </div>
+          <div className="stage-grain" />
+          <div className="chapter-top">
+            <span>AN EXPLORATION IN CHOCOLATE</span>
+            <span>SCROLL-DRIVEN STUDY · NO. 001</span>
+          </div>
+          <div className="chapter-copy" key={active}>
+            <div className="eyebrow">
+              <span className="short-line" />{" "}
+              {String(active + 1).padStart(2, "0")} / {chapters[active][0]}
+            </div>
+            <h1>
+              {chapters[active][1]}
+              <br />
+              <em>{chapters[active][2]}</em>
+            </h1>
+            <p>{chapters[active][3]}</p>
+            {active === 0 ? (
+              <button className="text-link" onClick={() => jump(1)}>
+                DISCOVER WHAT’S INSIDE <ArrowUpRight size={16} />
+              </button>
+            ) : (
+              <a className="text-link" href="#collection">
+                MAKE IT YOURS <ArrowUpRight size={16} />
+              </a>
+            )}
+          </div>
+          <div className="product-note">
+            <span className="star">✧</span>
+            <div>
+              THE BELGIAN
+              <br />
+              CHOCOLATE LAYER CAKE
+              <small>RICH BY NATURE. VELVET BY DESIGN.</small>
+            </div>
+          </div>
+          <div className="stage-bottom">
+            <button
+              className="scroll-invitation"
+              onClick={() =>
+                active < 6
+                  ? jump(active + 1)
+                  : document
+                      .getElementById("collection")
+                      .scrollIntoView({
+                        behavior: reduced ? "instant" : "smooth",
+                      })
+              }
+            >
+              <span className="scroll-circle">
+                <ArrowDown size={17} />
+              </span>
+              <span>
+                SCROLL TO SAVOUR<small>A STORY IN SEVEN CHAPTERS</small>
+              </span>
+            </button>
+            <div className="chapter-nav" aria-label="Journey chapters">
+              {chapters.map((c, i) => (
+                <button
+                  key={c[0]}
+                  className={active === i ? "current" : ""}
+                  aria-label={`Chapter ${i + 1}: ${c[0]}`}
+                  aria-current={active === i ? "step" : undefined}
+                  onClick={() => jump(i)}
+                >
+                  <span>{String(i + 1).padStart(2, "0")}</span>
+                </button>
+              ))}
+            </div>
+            <span className="vertical-note">SLOW DOWN. INDULGE.</span>
+          </div>
+          <div className="progress-track">
+            <div />
+          </div>
+        </div>
+        <div className="sr-only">
+          {chapters.map((c, i) => (
+            <section key={c[0]}>
+              <h2>
+                Chapter {i + 1}: {c[0]}
+              </h2>
+              <p>{c.slice(1).join(" ")}</p>
+            </section>
+          ))}
+        </div>
+      </section>
+      <section className="manifesto">
+        <span className="eyebrow">THE ART OF A LITTLE MORE</span>
+        <h2>
+          Some pleasures
+          <br />
+          are worth <em>slowing down for.</em>
+        </h2>
+        <p>
+          Deeply chocolate. Delicately balanced. Made for the moments you want
+          to keep.
+        </p>
+        <div className="ingredient-line">
+          <span>01 / BELGIAN CHOCOLATE</span>
+          <span>02 / CULTURED BUTTER</span>
+          <span>03 / SILK-SOFT GANACHE</span>
+        </div>
+      </section>
+      <section id="collection" className="collection">
+        <div className="collection-intro">
+          <span className="eyebrow">YOUR OWN LITTLE EXTRAORDINARY</span>
+          <h2>
+            The signature.
+            <br />
+            <em>Your way.</em>
+          </h2>
+          <p>Build your perfect chocolate moment.</p>
+          <div className="seal">
+            VC
+            <span>
+              THE SIGNATURE
+              <br />
+              NO. 001
+            </span>
+          </div>
+          <p className="demo-note">
+            An interactive portfolio concept.
+            <br />
+            All prices and bag actions are demonstrations.
+            <br />
+            No orders or payments are processed.
+          </p>
+        </div>
+        <div className="customizer">
+          {Object.entries(options).map(([key, values], i) => (
+            <fieldset key={key}>
+              <legend>
+                <span>0{i + 1}</span> {key}
+              </legend>
+              <div className="choice-row">
+                {values.map(({ name, price }) => (
+                  <button
+                    key={name}
+                    aria-pressed={selection[key] === name}
+                    className={selection[key] === name ? "selected" : ""}
+                    onClick={() => {
+                      setSelection((s) => ({ ...s, [key]: name }));
+                      setNotice("");
+                    }}
+                  >
+                    {name}
+                    {price > 0 && <small>+${price}</small>}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          ))}
+          <div className="price-row">
+            <div>
+              <small>YOUR DEMO CREATION</small>
+              <strong>${total.toFixed(2)}</strong>
+            </div>
+            <button
+              className="primary"
+              onClick={() => {
+                setBag((b) => [
+                  ...b,
+                  { ...selection, price: total, id: crypto.randomUUID() },
+                ]);
+                setNotice("Your creation has been added to the demo bag.");
+              }}
+            >
+              ADD TO DEMO BAG <Plus size={18} />
+            </button>
+          </div>
+          <p className="live-notice" role="status">
+            {notice || "Made to imagine. No checkout required."}
+          </p>
+        </div>
+      </section>
+      <footer>
+        <div className="footer-top">
+          <span>AN OBSESSION, BEAUTIFULLY LAYERED.</span>
+          <a href="#home">
+            BACK TO THE BEGINNING <ArrowUpRight size={16} />
+          </a>
+        </div>
+        <div className="footer-wordmark">
+          VELVET CRUMB<span>®</span>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2026 · A CREATIVE PORTFOLIO STUDY</span>
+          <span>CHOCOLATE, CONSIDERED.</span>
+          <a
+            href="https://github.com/contactteamiqra-ai/velvet-crumb"
+            target="_blank"
+            rel="noreferrer"
+          >
+            VIEW THE PROJECT ↗
+          </a>
+        </div>
+      </footer>
+      {bagOpen && (
+        <div className="bag-backdrop" onClick={() => setBagOpen(false)}>
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bag-title"
+            className="bag-panel"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="close-bag"
+              aria-label="Close bag"
+              onClick={() => setBagOpen(false)}
+            >
+              <X />
+            </button>
+            <span className="eyebrow">THE COLLECTION</span>
+            <h2 id="bag-title">Your demo bag.</h2>
+            {bag.length === 0 ? (
+              <p>Your next little pleasure is waiting.</p>
+            ) : (
+              <>
+                <ul>
+                  {bag.map((item) => (
+                    <li key={item.id}>
+                      <strong>
+                        {item.Flavour} · {item.Size}
+                      </strong>
+                      <p>
+                        {item.Frosting} / {item.Topping}
+                      </p>
+                      <div>
+                        <span>${item.price.toFixed(2)}</span>
+                        <button
+                          onClick={() =>
+                            setBag((b) => b.filter((x) => x.id !== item.id))
+                          }
+                          aria-label={`Remove ${item.Flavour} cake`}
+                        >
+                          <Minus size={14} /> Remove
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <div className="bag-total">
+                  Demo total{" "}
+                  <strong>
+                    ${bag.reduce((a, b) => a + b.price, 0).toFixed(2)}
+                  </strong>
+                </div>
+              </>
+            )}
+            <p className="demo-note">
+              Portfolio demonstration only. Checkout is unavailable; nothing
+              will be charged.
+            </p>
+            <button
+              className="primary"
+              onClick={() => {
+                setBagOpen(false);
+                document.getElementById("collection").scrollIntoView();
+              }}
+            >
+              CONTINUE CREATING <ArrowUpRight size={16} />
+            </button>
+          </section>
+        </div>
+      )}
+    </main>
+  );
+}
+export default App;
