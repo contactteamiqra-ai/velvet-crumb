@@ -23,3 +23,15 @@ test("slice moves outwards continuously and does not inherit elapsed time", () =
   assert.deepEqual(cakeMotion(-10), cakeMotion(0));
   assert.deepEqual(cakeMotion(10), cakeMotion(1));
 });
+
+test("both blade passes finish before separation begins", () => {
+  for (const p of [.35,.53]) {
+    const pose=cakeMotion(p);
+    assert(pose.knifeVisible);
+    assert(pose.knifeHeight < .24);
+    assert.equal(pose.separate,0);
+  }
+  assert(cakeMotion(.43).knifeHeight > 1.9);
+  assert.equal(cakeMotion(.62).knifeVisible,false);
+  assert(cakeMotion(.62).separate>0);
+});

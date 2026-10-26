@@ -1,0 +1,45 @@
+{
+  "asset": "strawberry_chocolate_cake",
+  "author": "Kuutti Siitonen",
+  "source": "https://polyhaven.com/a/strawberry_chocolate_cake",
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "files": [
+    {
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/strawberry_chocolate_cake/strawberry_chocolate_cake_2k.gltf",
+      "file": "strawberry_chocolate_cake_2k.gltf",
+      "sha256": "58e88c06ea03ad7eac5c22f971e57752b785cca41a2401fc31243a42c687940d",
+      "bytes": 2933
+    },
+    {
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/strawberry_chocolate_cake/strawberry_chocolate_cake_diff_2k.jpg",
+      "file": "textures/strawberry_chocolate_cake_diff_2k.jpg",
+      "sha256": "a187d52076fa82dffc6c42f95f895b7b54157c48972c4e196986721d05a1fce6",
+      "bytes": 3101714
+    },
+    {
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/strawberry_chocolate_cake/strawberry_chocolate_cake.bin",
+      "file": "strawberry_chocolate_cake.bin",
+      "sha256": "c7245b0f1aaefc170631d7fd2c4a32321334df0ae72a0adddf55a2b008776d61",
+      "bytes": 661780
+    },
+    {
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/strawberry_chocolate_cake/strawberry_chocolate_cake_arm_2k.jpg",
+      "file": "textures/strawberry_chocolate_cake_arm_2k.jpg",
+      "sha256": "7e9fbc775255fabe1ae1cdb8722c1c995b0935a43bef253156141af944d6eb52",
+      "bytes": 2356898
+    },
+    {
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/strawberry_chocolate_cake/strawberry_chocolate_cake_nor_gl_2k.jpg",
+      "file": "textures/strawberry_chocolate_cake_nor_gl_2k.jpg",
+      "sha256": "2b04b2fa41329b2429eb94e48437c81e5edb60ee71be58386346dea7ef918fe6",
+      "bytes": 3856601
+    }
+  ],
+  "derived_asset": {
+    "file": "public/assets/cake/atelier-cake.glb",
+    "sha256": "6ce5eddcd3ebba13046405980bac0614f37b43ef3f4eae66b77978b4c556ed3f",
+    "bytes": 2671180,
+    "notes": "Source exterior with original UVs; authored radial interiors and porcelain support; meshopt/WebP. Strawberries retained."
+  }
+}

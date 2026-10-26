@@ -10,8 +10,8 @@ test('compression retains independent intact, body and slice groups',()=>{
  assert(gltf.extensionsUsed.includes('EXT_meshopt_compression'));
  assert(data.byteLength<5_000_000,'review asset should stay within its download budget');
 });
-test('crumb, cream and ganache have PBR surface detail',()=>{
- for(const prefix of ['Moist dark chocolate','Whipped dark chocolate','Belgian ganache']){
-  const material=gltf.materials.find(m=>m.name?.startsWith(prefix));assert(material, prefix);assert(material.normalTexture,`${prefix} needs normal detail`);assert(material.pbrMetallicRoughness.metallicRoughnessTexture,`${prefix} needs roughness detail`);
+test('photographic scan and authored interior retain independent PBR maps',()=>{
+ for(const prefix of ['strawberry_chocolate_cake','Authored cut interior']){
+  const material=gltf.materials.find(m=>m.name?.startsWith(prefix));assert(material,prefix);assert(material.normalTexture);assert(material.pbrMetallicRoughness.baseColorTexture);assert(material.pbrMetallicRoughness.metallicRoughnessTexture);
  }
 });

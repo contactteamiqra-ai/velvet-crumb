@@ -19,13 +19,13 @@ const chapters = [
     "THE SIGNATURE",
     "Pleasure,",
     "in every layer.",
-    "Belgian chocolate. Three impossibly rich layers. One beautiful obsession.",
+    "Chocolate cream. Fresh strawberries. A little pleasure, beautifully considered.",
   ],
   [
     "THE REVEAL",
     "Made to be",
     "taken apart.",
-    "A slice draws away. Dark sponge meets a silk-soft chocolate cream; every layer has its moment.",
+    "Two slow cuts. A slice draws away, revealing chocolate sponge and cream beneath the strawberry crown.",
   ],
   [
     "THE ELEMENTS",
@@ -255,7 +255,7 @@ function App() {
             <div>
               THE BELGIAN
               <br />
-              CHOCOLATE LAYER CAKE
+              STRAWBERRY CHOCOLATE CAKE
               <small>RICH BY NATURE. VELVET BY DESIGN.</small>
             </div>
           </div>

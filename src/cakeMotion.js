@@ -7,12 +7,17 @@ const smooth = (x) => {
 export function cakeMotion(progress) {
   const p = clamp(progress),
     approach = smooth((p - 0.18) / 0.25),
-    separate = smooth((p - 0.48) / 0.39);
-  const settle = smooth((p - 0.86) / 0.14);
+    separate = smooth((p - 0.60) / 0.30);
+  const settle = smooth((p - 0.90) / 0.10);
+  const first = smooth((p - .26) / .09) - smooth((p - .36) / .06);
+  const second = smooth((p - .45) / .08) - smooth((p - .54) / .06);
   return {
     p,
     approach,
     separate,
+    knifeVisible: p > .23 && p < .61,
+    knifeHeight: 2.0 - 1.78 * (first + second),
+    knifeAngle: -(82 - 36 * smooth((p - .41) / .035)) * Math.PI / 180,
     rotation: -0.17 + p * 0.25,
     slice: [
       0.42 * separate,
@@ -22,9 +27,9 @@ export function cakeMotion(progress) {
     sliceRotation: -0.035 * separate,
     camera: [
       0.1 + approach * 0.28,
-      2.95 - approach * 0.28,
-      8.1 - approach * 0.55,
+      3.4 - approach * 0.20,
+      7.2 - approach * 0.6,
     ],
-    target: [0.05, 0.73 - 0.08 * separate, 0.12 * separate],
+    target: [0.05, 0.49 - 0.04 * separate, 0.12 * separate],
   };
 }

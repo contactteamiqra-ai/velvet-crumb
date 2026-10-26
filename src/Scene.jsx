@@ -74,6 +74,28 @@ function Studio() {
     </>
   );
 }
+function CuttingBlade({ blade }) {
+  return <group ref={blade}>
+    <group position={[.86, 0, 0]}>
+      <mesh castShadow>
+        <boxGeometry args={[1.86, .30, .018]} />
+        <meshStandardMaterial color="#d8dce1" metalness={1} roughness={.19} />
+      </mesh>
+      <mesh position={[0, -.165, 0]}>
+        <boxGeometry args={[1.86, .035, .004]} />
+        <meshStandardMaterial color="#f0f2f4" metalness={1} roughness={.12} />
+      </mesh>
+      <mesh position={[1.25, .055, 0]} castShadow>
+        <boxGeometry args={[.64, .19, .11]} />
+        <meshStandardMaterial color="#21150f" roughness={.35} />
+      </mesh>
+      {[1.08,1.4].map(x=><mesh key={x} position={[x,.055,.058]}>
+        <sphereGeometry args={[.018,12,8]} />
+        <meshStandardMaterial color="#d8c4a1" metalness={.85} roughness={.22} />
+      </mesh>)}
+    </group>
+  </group>;
+}
 function Cake({ progress }) {
   const { scene: asset } = useLoader(
     GLTFLoader,
@@ -83,7 +105,7 @@ function Cake({ progress }) {
   const root = useRef(),
     body = useRef(),
     slice = useRef(),
-    whole = useRef();
+    whole = useRef(), blade = useRef();
   const { gl } = useThree();
   useLayoutEffect(() => {
     whole.current = asset.getObjectByName("CakeWhole");
@@ -107,6 +129,9 @@ function Cake({ progress }) {
   useFrame(({ camera }) => {
     const m = cakeMotion(progress.current);
     root.current.rotation.y = m.rotation;
+    blade.current.visible = m.knifeVisible;
+    blade.current.position.y = m.knifeHeight;
+    blade.current.rotation.y = m.knifeAngle;
     if (whole.current) {
       whole.current.visible = m.p < 0.39;
       body.current.visible = m.p >= 0.39;
@@ -125,6 +150,7 @@ function Cake({ progress }) {
   return (
     <group ref={root}>
       <primitive object={asset} />
+      <CuttingBlade blade={blade} />
     </group>
   );
 }
