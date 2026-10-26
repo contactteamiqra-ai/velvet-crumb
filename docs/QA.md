@@ -16,3 +16,5 @@ The exterior is scanned; exposed interiors remain authored approximations. Physi
 At scroll progress .8996, the actual canvas slice position is `[.4200,-.0550,.8600]`. Captures wait for the rendered progress to reach the requested pose; an initial timing-only capture was discarded because software WebGL lagged behind GSAP's target. SwiftShader capture timing is not a real-device performance measurement.
 
 Reverse scrolling restored slice position `[0,0,0]` (rendered progress .0001). A separate reduced-motion capture at progress .3000 verified the corrected blade orientation against the radial cut. No uncaught errors occurred in that run.
+
+The combined desktop-to-mobile resize run timed out waiting for its zero-progress target after viewport reflow. A fresh 390×844 reduced-motion session passed at exact progress 0, with no page errors or horizontal overflow, and add-to-bag/Escape dismissal passed. Responsive reflow during an active scrub still warrants physical-device review; the timeout is not treated as a successful combined run.
