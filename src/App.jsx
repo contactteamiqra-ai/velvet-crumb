@@ -1,12 +1,795 @@
-import React,{Suspense,useEffect,useRef,useState} from 'react';
-import {Canvas,useFrame} from '@react-three/fiber';
-import {Environment,Float,ContactShadows} from '@react-three/drei';
-import gsap from 'gsap';
-import {ScrollTrigger} from 'gsap/ScrollTrigger';
-import {ArrowDown,ArrowUpRight,ChevronDown,Volume2,VolumeX,Menu,X} from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  ArrowUpRight,
+  ArrowDown,
+  ShoppingBag,
+  Menu,
+  X,
+  Plus,
+  Minus,
+  Leaf,
+  Gift,
+  Truck,
+  Sparkles,
+  Check,
+} from "lucide-react";
+import "./styles.css";
 gsap.registerPlugin(ScrollTrigger);
-const IMG={slice:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1300&q=85',ingredients:'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=1400&q=85',mix:'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=1300&q=85',bake:'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=1300&q=85',finish:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1500&q=85'};
-function Cake({progress=0}){const group=useRef();useFrame((_,dt)=>{if(group.current)group.current.rotation.y+=dt*.17});const layers=[0,.36,.72];return <group ref={group} position={[0,-.38,0]} rotation={[.08,0,.04]}><mesh position={[0,-.16,0]}><cylinderGeometry args={[2.0,2.0,.17,96]}/><meshStandardMaterial color="#b98c57" metalness={.72} roughness={.2}/></mesh>{layers.map((v,i)=><React.Fragment key={v}><mesh position={[0,v,0]} castShadow><cylinderGeometry args={[1.72,1.72,.32,96]}/><meshStandardMaterial color={i%2?'#5c281d':'#392018'} roughness={.72}/></mesh><mesh position={[0,v+.18,0]} castShadow><cylinderGeometry args={[1.77,1.77,.11,96]}/><meshStandardMaterial color={i===2?'#3e1d17':'#f2d3b4'} roughness={.42}/></mesh></React.Fragment>)}<mesh position={[0,1.01,0]} castShadow><cylinderGeometry args={[1.78,1.78,.14,96]}/><meshStandardMaterial color="#32140f" roughness={.19} metalness={.04}/></mesh>{Array.from({length:12},(_,i)=>{let a=i*Math.PI/6;return <mesh key={i} position={[Math.sin(a)*1.37,1.14,Math.cos(a)*1.37]} scale={[.19,.14,.22]} castShadow><sphereGeometry args={[1,20,16]}/><meshStandardMaterial color={i%3===0?'#ad603a':'#1a0d0a'} roughness={.27}/></mesh>})}<mesh position={[0,1.19,0]}><sphereGeometry args={[.27,32,24]}/><meshStandardMaterial color="#a65a37" roughness={.25}/></mesh></group>}
-function CakeScene(){return <Canvas shadows camera={{position:[0,2.6,7.5],fov:39}} dpr={[1,1.7]} gl={{antialias:true,alpha:true}}><ambientLight intensity={1.35}/><spotLight position={[4,8,6]} intensity={100} angle={.55} penumbra={1} castShadow/><pointLight position={[-5,2,0]} intensity={40} color="#f2a16d"/><Suspense fallback={null}><Float speed={1.1} rotationIntensity={.05} floatIntensity={.14}><Cake/></Float><ContactShadows position={[0,-1.2,0]} opacity={.5} scale={8} blur={2.5} far={4}/><Environment preset="studio"/></Suspense></Canvas>}
-const steps=[{num:'01',eyebrow:'THE FIRST IMPRESSION',title:'A little slice\\nof extraordinary.',copy:'The finest moments deserve the richest chocolate. Watch the signature velvet cake reveal its delicious layers.',image:IMG.slice,button:'Discover the layers'},{num:'02',eyebrow:'NOTHING ORDINARY INSIDE',title:'Only the good\\nstuff goes in.',copy:'Cocoa with depth. Silky cream. Carefully balanced sweetness. Every ingredient earns its place.',image:IMG.ingredients,button:'Meet the ingredients'},{num:'03',eyebrow:'THE MAKING',title:'Whisked into\\nsomething wonderful.',copy:'Pure chocolate, smooth batter, and the kind of patience great cake deserves. No shortcuts, only craft.',image:IMG.mix,button:'Watch it come together'},{num:'04',eyebrow:'THE TRANSFORMATION',title:'A little heat.\\nA lot of magic.',copy:'Into the oven. A gentle rise. Deep, irresistible chocolate aromas imagined in every frame.',image:IMG.bake,button:'The finishing touch'},{num:'05',eyebrow:'THE GRAND FINALE',title:'Dressed to\\nimpress.',copy:'Silky ganache, hand-inspired chocolate details, and a presentation made to be remembered.',image:IMG.finish,button:'The perfect gift'}];
-function App(){const [menu,setMenu]=useState(false),[flavor,setFlavor]=useState('Dark chocolate'),[size,setSize]=useState('6 inch'),[added,setAdded]=useState(false);const hero=useRef();const cost=(size==='6 inch'?38:size==='8 inch'?52:68)+(flavor==='Hazelnut'?6:flavor==='Salted caramel'?4:0);useEffect(()=>{const ctx=gsap.context(()=>{gsap.to('.hero-content',{y:-165,opacity:0,scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}});gsap.utils.toArray('.story-section').forEach(section=>{const elements=section.querySelectorAll('.reveal');gsap.fromTo(elements,{y:65,opacity:0},{y:0,opacity:1,duration:1,stagger:.15,ease:'power2.out',scrollTrigger:{trigger:section,start:'top 75%',toggleActions:'play none none reverse'}});gsap.fromTo(section.querySelector('.story-img'),{scale:1.16},{scale:1,scrollTrigger:{trigger:section,start:'top bottom',end:'bottom top',scrub:true}})});gsap.fromTo('.final-card',{y:90,opacity:0},{y:0,opacity:1,scrollTrigger:{trigger:'.finale',start:'top 65%',end:'top 25%',scrub:1}}) });return ()=>ctx.revert()},[]);return <main><header className="topbar"><a className="brand" href="#home">VELVET <span>CRUMB</span><small>ATELIER DE CHOCOLAT</small></a><nav className={menu?'nav open':'nav'}><a onClick={()=>setMenu(false)} href="#story">Our story</a><a onClick={()=>setMenu(false)} href="#process">The craft</a><a onClick={()=>setMenu(false)} href="#customize">The collection</a></nav><a className="nav-order" href="#customize">EXPLORE CAKES <ArrowUpRight size={15}/></a><button aria-label="Toggle menu" className="mobile-menu" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></header><section id="home" ref={hero} className="hero"><div className="hero-glow"/><span className="hero-ring ring-one"/><span className="hero-ring ring-two"/><div className="hero-content"><div className="eyebrow gold">AN EXPERIENCE WORTH SAVOURING <span>✦</span> EST. 2026</div><h1>Chocolate, <em>reimagined.</em></h1><p>Layers of pleasure. A story in every slice.</p><div className="cake-canvas" aria-label="Rotating stylized 3D chocolate cake"><CakeScene/></div><span className="hero-cake-caption">THE SIGNATURE · NO. 001</span></div><a className="scroll-cue" href="#story">SCROLL TO INDULGE <ArrowDown size={17}/></a><span className="vertical-note">CRAFTED WITH OBSESSION</span></section><section className="marquee" aria-hidden="true"><div>✦ &nbsp; MADE FOR MOMENTS &nbsp; ✦ &nbsp; LAYERS OF LOVE &nbsp; ✦ &nbsp; DECADENT BY DESIGN &nbsp; ✦ &nbsp; MADE FOR MOMENTS &nbsp; ✦ &nbsp; LAYERS OF LOVE &nbsp; ✦ &nbsp; DECADENT BY DESIGN &nbsp;</div></section>{steps.map((s,i)=><section id={i===0?'story':i===2?'process':undefined} className={'story-section '+(i%2?'reverse':'')} key={s.num}><div className="story-image-wrap"><img className="story-img" src={s.image} loading="lazy" alt={s.title.replace('\\n',' ')}/><div className="image-tint"/><span className="image-index">{s.num} / 05</span></div><div className="story-copy"><div className="reveal eyebrow">✦ &nbsp; {s.eyebrow}</div><h2 className="reveal">{s.title.split('\\n').map((line,j)=><React.Fragment key={j}>{j>0&&<br/>}{line}</React.Fragment>)}</h2><div className="hairline reveal"/><p className="reveal">{s.copy}</p><span className="reveal little-ritual">THE VELVET CRUMB RITUAL <span>0{i+1}</span></span></div></section>)}<section className="packaging"><div className="package-label">THE FINAL TOUCH</div><div className="gift"> <div className="gift-lid"/><div className="gift-box"><span>VELVET<br/>CRUMB</span><small>CHOCOLATE ATELIER</small></div><div className="ribbon-v"/><div className="ribbon-h"/></div><h2>Beautifully boxed.<br/><em>Unforgettably yours.</em></h2><p>Every masterpiece deserves a little ceremony.</p></section><section id="customize" className="finale"><div className="final-card"><div className="final-photo"><img src={IMG.finish} alt="Chocolate celebration cake" loading="lazy"/></div><div className="final-details"><div className="eyebrow gold">THE SIGNATURE COLLECTION · 001</div><h2>Your moment.<br/><em>Your cake.</em></h2><p>A chocolate celebration, made entirely your own. Customize your favorite and discover the possibilities.</p><label htmlFor="flavor">CHOOSE YOUR FLAVOUR</label><div className="choice-row">{['Dark chocolate','Hazelnut','Salted caramel'].map(f=><button key={f} className={flavor===f?'selected':''} onClick={()=>{setFlavor(f);setAdded(false)}}>{f}</button>)}</div><label htmlFor="size">SELECT YOUR SIZE</label><div className="choice-row">{['6 inch','8 inch','10 inch'].map(s=><button key={s} className={size===s?'selected':''} onClick={()=>{setSize(s);setAdded(false)}}>{s}</button>)}</div><div className="checkout-line"><div><small>ESTIMATED PRICE</small><strong>${cost}.00</strong></div><button className="primary-cta" onClick={()=>setAdded(true)}>{added?'ADDED TO DEMO BAG ✓':'ADD TO BAG'} <ArrowUpRight size={18}/></button></div><small className="demo-note">Portfolio concept only. No payment or order is processed.</small></div></div></section><footer><div className="footer-brand">VELVET <em>CRUMB</em></div><div className="footer-bottom"><span>© 2026 VELVET CRUMB · A PORTFOLIO EXPERIENCE</span><a href="#home">BACK TO THE TOP ↑</a><span>DESIGNED TO DELIGHT.</span></div></footer></main>};export default App;
+const money = (n) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
+    n,
+  );
+import { products } from "./products";
+
+import { Photo, Brand, Modal, ProductCard } from "./components";
+
+function App() {
+  const [menu, setMenu] = useState(false),
+    [category, setCategory] = useState("All delights"),
+    [modal, setModal] = useState(null),
+    [toast, setToast] = useState(""),
+    [step, setStep] = useState(0),
+    [request, setRequest] = useState(null);
+  const [bag, setBag] = useState(() => {
+    try {
+      const data = JSON.parse(localStorage.getItem("velvet-bag"));
+      return Object.fromEntries(
+        Object.entries(data || {}).filter(
+          ([id, q]) =>
+            products.some((p) => p.id === id) &&
+            Number.isInteger(q) &&
+            q > 0 &&
+            q <= 99,
+        ),
+      );
+    } catch {
+      return {};
+    }
+  });
+  const count = Object.values(bag).reduce((a, b) => a + b, 0),
+    total = products.reduce((sum, p) => sum + p.price * (bag[p.id] || 0), 0);
+  useEffect(() => {
+    try {
+      localStorage.setItem("velvet-bag", JSON.stringify(bag));
+    } catch {}
+  }, [bag]);
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(""), 2600);
+    return () => clearTimeout(t);
+  }, [toast]);
+  useEffect(() => {
+    const mm = gsap.matchMedia();
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.from(".hero-copy > *", {
+        opacity: 0,
+        y: 26,
+        duration: 1,
+        stagger: 0.13,
+        ease: "power2.out",
+      });
+      gsap.utils.toArray(".reveal").forEach((el) =>
+        gsap.from(el, {
+          y: 35,
+          opacity: 0,
+          duration: 0.8,
+          scrollTrigger: { trigger: el, start: "top 92%", once: true },
+        }),
+      );
+      gsap.to(".hero-photo img", {
+        yPercent: 10,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+      gsap.to(".signature-photo img", {
+        scale: 1.12,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".signature",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+    });
+    return () => mm.revert();
+  }, []);
+  const add = (id) => {
+    setBag((b) => ({ ...b, [id]: Math.min((b[id] || 0) + 1, 99) }));
+    setToast("A little delight added to your bag");
+  };
+  const quantity = (id, delta) =>
+    setBag((b) => {
+      const next = { ...b, [id]: Math.min(99, (b[id] || 0) + delta) };
+      if (next[id] <= 0) delete next[id];
+      return next;
+    });
+  function download() {
+    const lines = [
+      "VELVET CRUMB — REQUEST SUMMARY",
+      "This is a request draft, not a confirmed order.",
+      "",
+      ...(request
+        ? Object.entries(request).map(([k, v]) => `${k}: ${v}`)
+        : products
+            .filter((p) => bag[p.id])
+            .map(
+              (p) => `${bag[p.id]} × ${p.name} — ${money(p.price * bag[p.id])}`,
+            )),
+      ...(!request ? ["", `Estimated subtotal: ${money(total)}`] : []),
+      "",
+      "Delivery, availability and final pricing require bakery confirmation.",
+    ];
+    const url = URL.createObjectURL(
+      new Blob([lines.join("\n")], { type: "text/plain" }),
+    );
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "velvet-crumb-request.txt";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  return (
+    <>
+      <div className="announcement">
+        A little everyday luxury. A beautiful reason to celebrate.{" "}
+        <span>✧</span>
+      </div>
+      <header>
+        <Brand />
+        <nav className={menu ? "nav open" : "nav"} aria-label="Main navigation">
+          {[
+            ["Our collection", "collection"],
+            ["Our story", "story"],
+            ["The art of baking", "craft"],
+          ].map(([label, id]) => (
+            <a key={id} href={`#${id}`} onClick={() => setMenu(false)}>
+              {label}
+            </a>
+          ))}
+        </nav>
+        <div className="header-actions">
+          <button
+            className="bag-button"
+            onClick={() => {
+              setRequest(null);
+              setModal("bag");
+            }}
+            aria-label={`Open bag, ${count} items`}
+          >
+            <ShoppingBag size={19} />
+            <span className="bag-count">{count}</span>
+          </button>
+          <button
+            className="header-order"
+            onClick={() => {
+              setRequest(null);
+              setModal("custom");
+            }}
+          >
+            Order a cake <ArrowUpRight size={16} />
+          </button>
+          <button
+            className="icon-button mobile-toggle"
+            onClick={() => setMenu(!menu)}
+            aria-label="Toggle navigation"
+            aria-expanded={menu}
+          >
+            {menu ? <X /> : <Menu />}
+          </button>
+        </div>
+      </header>
+      <main id="home">
+        <section className="hero">
+          <div className="hero-copy">
+            <div className="eyebrow">
+              <span className="tiny-star">✧</span> THE SWEET SIDE OF SLOW LIVING
+            </div>
+            <h1>
+              A little crumb.
+              <br />A little <em>magic.</em>
+            </h1>
+            <p>
+              Beautifully baked cakes and little indulgences.
+              <br className="desktop-break" /> Made for ordinary days and
+              extraordinary moments.
+            </p>
+            <div className="hero-buttons">
+              <a className="button dark" href="#collection">
+                Explore desserts <ArrowUpRight size={18} />
+              </a>
+              <button
+                className="text-button"
+                onClick={() => {
+                  setRequest(null);
+                  setModal("custom");
+                }}
+              >
+                Order your cake <ArrowUpRight size={17} />
+              </button>
+            </div>
+            <div className="hero-footnote">
+              <span className="line-star">✧</span>
+              <span>
+                Thoughtfully made.
+                <br />
+                <strong>Joyfully savoured.</strong>
+              </span>
+            </div>
+          </div>
+          <div className="hero-photo">
+            <Photo
+              name="hero"
+              eager
+              alt="Chocolate celebration cake topped with piped chocolate cream"
+            />
+            <div className="photo-shade" />
+            <div className="round-stamp">
+              A LITTLE LUXURY<span>✧</span>IN EVERY LAYER
+            </div>
+            <div className="hero-image-caption">
+              <span>THE ART OF SOMETHING SWEET</span>
+              <span>01 — VELVET CRUMB</span>
+            </div>
+          </div>
+          <a className="scroll-link" href="#story">
+            <ArrowDown size={15} /> SCROLL TO SAVOUR
+          </a>
+        </section>
+        <div className="values-ribbon">
+          <span>Good ingredients</span>
+          <i>✧</i>
+          <span>Beautiful little details</span>
+          <i>✧</i>
+          <span>Baked with intention</span>
+          <i>✧</i>
+          <span>Made for your moments</span>
+        </div>
+        <section id="story" className="intro section-pad reveal">
+          <span className="eyebrow">WELCOME TO VELVET CRUMB</span>
+          <h2>
+            Life is sweeter
+            <br />
+            with <em>something special.</em>
+          </h2>
+          <p>
+            The first bite. The last crumb. The moment you wish would last a
+            little longer. We believe a beautiful dessert can turn even the
+            simplest day into an occasion.
+          </p>
+          <span className="signature-script">With love, Velvet Crumb</span>
+        </section>
+        <section className="signature" aria-labelledby="signature-title">
+          <div className="signature-photo">
+            <Photo
+              name="chocolate"
+              alt="Rich chocolate cake with smooth ganache and chocolate details"
+            />
+            <span className="image-note">RICH. SILKY. UNFORGETTABLE.</span>
+          </div>
+          <div className="signature-copy reveal">
+            <span className="eyebrow">MEET OUR SIGNATURE · NO. 01</span>
+            <h2 id="signature-title">
+              Chocolate,
+              <br />
+              in its <em>finest form.</em>
+            </h2>
+            <p>
+              Deep cocoa. Delicate layers. A slow, silky finish. The Velvet Noir
+              is our love letter to chocolate — indulgent, beautifully balanced,
+              and always worth another bite.
+            </p>
+            <div className="cake-details">
+              <span>
+                <strong>Dark cocoa</strong>
+                <small>A beautifully rich sponge</small>
+              </span>
+              <span>
+                <strong>Silky ganache</strong>
+                <small>A melt-away finish</small>
+              </span>
+            </div>
+            <button className="button dark" onClick={() => add("noir")}>
+              Discover Velvet Noir · $48 <ArrowUpRight size={17} />
+            </button>
+          </div>
+        </section>
+        <section id="collection" className="collection section-pad">
+          <div className="section-top reveal">
+            <div>
+              <span className="eyebrow">FIND YOUR LITTLE INDULGENCE</span>
+              <h2>
+                The sweetest <em>collection.</em>
+              </h2>
+            </div>
+            <p>
+              For the table. For the celebration.
+              <br />
+              Or simply, just for you.
+            </p>
+          </div>
+          <div className="filters" aria-label="Filter desserts">
+            {["All delights", "Cakes", "Pastries", "Cupcakes", "Cookies"].map(
+              (c) => (
+                <button
+                  key={c}
+                  aria-pressed={category === c}
+                  className={category === c ? "active" : ""}
+                  onClick={() => setCategory(c)}
+                >
+                  {c}
+                </button>
+              ),
+            )}
+          </div>
+          <div className="product-grid">
+            {products
+              .filter(
+                (p) => category === "All delights" || p.category === category,
+              )
+              .map((p) => (
+                <ProductCard product={p} onAdd={add} key={p.id} />
+              ))}
+          </div>
+          <p className="collection-note">
+            A thoughtfully imagined menu · Sample prices in USD · Allergen
+            details available below
+          </p>
+        </section>
+        <section id="craft" className="craft section-pad">
+          <div className="craft-heading reveal">
+            <span className="eyebrow">
+              FROM SIMPLE THINGS, SOMETHING WONDERFUL
+            </span>
+            <h2>
+              A little patience.
+              <br />
+              <em>A lot of pleasure.</em>
+            </h2>
+            <p>
+              Follow the rhythm of the bake. From the first fold to the final
+              flourish, every little detail has its moment.
+            </p>
+          </div>
+          <div
+            className="craft-stage"
+            role="tabpanel"
+            id="craft-panel"
+            aria-label={["Mix & fold", "Rise & bake", "Frost & finish"][step]}
+          >
+            <Photo
+              key={step}
+              name={["chocolate", "croissant", "cupcake"][step]}
+              alt={
+                [
+                  "Chocolate and cocoa textures",
+                  "Golden layers of freshly baked pastry",
+                  "Delicately finished frosting",
+                ][step]
+              }
+            />
+            <div className="craft-overlay" />
+            <span className="craft-big-number">0{step + 1}</span>
+            <div className="craft-caption">
+              <small>THE VELVET CRUMB RITUAL</small>
+              <h3>
+                {
+                  [
+                    "Start with something good.",
+                    "Let warmth work its magic.",
+                    "Finish with a little flourish.",
+                  ][step]
+                }
+              </h3>
+            </div>
+          </div>
+          <div
+            className="craft-tabs"
+            role="tablist"
+            aria-label="The baking ritual"
+          >
+            {[
+              ["01", "Mix & fold", "Rich ingredients, brought together."],
+              ["02", "Rise & bake", "Slow warmth. Golden perfection."],
+              ["03", "Frost & finish", "The details make the difference."],
+            ].map(([n, title, copy], i) => (
+              <button
+                aria-controls="craft-panel"
+                role="tab"
+                aria-selected={step === i}
+                tabIndex={step === i ? 0 : -1}
+                onKeyDown={(event) => {
+                  const targets = {
+                    ArrowRight: (i + 1) % 3,
+                    ArrowLeft: (i + 2) % 3,
+                    Home: 0,
+                    End: 2,
+                  };
+                  if (event.key in targets) {
+                    event.preventDefault();
+                    const next = targets[event.key];
+                    setStep(next);
+                    event.currentTarget.parentElement.children[next].focus();
+                  }
+                }}
+                key={n}
+                className={step === i ? "active" : ""}
+                onClick={() => setStep(i)}
+              >
+                <span>{n}</span>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{copy}</p>
+                </div>
+                <ArrowUpRight size={20} />
+              </button>
+            ))}
+          </div>
+        </section>
+        <section className="best section-pad">
+          <div className="best-copy reveal">
+            <span className="eyebrow">THE ONES YOU'LL COME BACK FOR</span>
+            <h2>
+              Some things
+              <br />
+              are simply <em>irresistible.</em>
+            </h2>
+            <p>
+              A golden, shattering crust. A soft, buttery centre. Our morning
+              favourites make a beautiful ritual out of the everyday.
+            </p>
+            <button
+              className="text-button"
+              onClick={() => {
+                setCategory("Pastries");
+                document
+                  .getElementById("collection")
+                  .scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Meet your new favourites <ArrowUpRight size={18} />
+            </button>
+          </div>
+          <div className="best-photo">
+            <Photo name="croissant" alt="Golden, flaky croissants" />
+            <span className="best-label">
+              THE MORNING EDIT <span>FROM $5</span>
+            </span>
+          </div>
+        </section>
+        <section className="quality section-pad">
+          <div className="quality-title">
+            <span className="eyebrow">IT'S THE LITTLE THINGS</span>
+            <h2>
+              Beautiful inside. <em>And out.</em>
+            </h2>
+          </div>
+          <div className="quality-grid">
+            {[
+              [
+                Leaf,
+                "Goodness comes first",
+                "Real butter, rich cocoa, and thoughtfully chosen ingredients.",
+              ],
+              [
+                Sparkles,
+                "A taste of care",
+                "Small details and carefully balanced flavours in every bite.",
+              ],
+              [
+                Gift,
+                "Dressed for the occasion",
+                "Thoughtful finishes for gifts and celebrations.",
+              ],
+              [
+                Truck,
+                "Made for your moment",
+                "Custom cake requests and delivery preferences, all in one place.",
+              ],
+            ].map(([Icon, title, copy]) => (
+              <div key={title}>
+                <Icon strokeWidth={1.2} size={30} />
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section className="celebrate section-pad reveal">
+          <span className="eyebrow">
+            YOUR OCCASION. OUR SWEETEST INSPIRATION.
+          </span>
+          <h2>
+            Make a moment
+            <br />
+            <em>of it.</em>
+          </h2>
+          <p>
+            Birthdays, big news, or a beautiful just-because.
+            <br />
+            Let's dream up something delicious.
+          </p>
+          <button
+            className="button dark"
+            onClick={() => {
+              setRequest(null);
+              setModal("custom");
+            }}
+          >
+            Create your celebration cake <ArrowUpRight size={18} />
+          </button>
+          <span className="celebrate-star">✧</span>
+        </section>
+      </main>
+      <footer>
+        <div className="footer-main">
+          <div>
+            <Brand />
+            <p>
+              A little everyday luxury.
+              <br />
+              Down to the very last crumb.
+            </p>
+          </div>
+          <div>
+            <span className="eyebrow">EXPLORE</span>
+            <a href="#collection">The collection</a>
+            <a href="#story">Our story</a>
+            <a href="#craft">The art of baking</a>
+          </div>
+          <div>
+            <span className="eyebrow">GOOD TO KNOW</span>
+            <button onClick={() => setModal("allergens")}>
+              Ingredients & allergens
+            </button>
+            <button onClick={() => setModal("delivery")}>
+              Ordering & delivery
+            </button>
+            <button
+              onClick={() => {
+                setRequest(null);
+                setModal("custom");
+              }}
+            >
+              Custom celebrations
+            </button>
+          </div>
+          <div className="footer-note">
+            <span>✧</span>
+            <p>
+              Life's little pleasures,
+              <br />
+              <em>beautifully baked.</em>
+            </p>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} Velvet Crumb</span>
+          <span>Concept bakery · Illustrative menu and prices</span>
+          <a href="#home">BACK TO TOP ↑</a>
+        </div>
+      </footer>
+      <div className="toast" role="status">
+        {toast && (
+          <>
+            <Check size={17} />
+            {toast}
+          </>
+        )}
+      </div>
+      {modal && (
+        <Modal
+          title={
+            modal === "bag"
+              ? "Your little luxuries"
+              : modal === "custom"
+                ? "A cake for your moment"
+                : modal === "allergens"
+                  ? "Ingredients & allergens"
+                  : "Ordering & delivery"
+          }
+          onClose={() => setModal(null)}
+        >
+          {modal === "bag" ? (
+            <>
+              {count ? (
+                <>
+                  <div className="bag-items">
+                    {products
+                      .filter((p) => bag[p.id])
+                      .map((p) => (
+                        <div className="bag-item" key={p.id}>
+                          <Photo name={p.image} alt={p.name} />
+                          <div>
+                            <h3>{p.name}</h3>
+                            <span>{money(p.price)}</span>
+                            <div className="quantity">
+                              <button
+                                aria-label={`Remove one ${p.name}`}
+                                onClick={() => quantity(p.id, -1)}
+                              >
+                                <Minus size={14} />
+                              </button>
+                              <span>{bag[p.id]}</span>
+                              <button
+                                aria-label={`Add one ${p.name}`}
+                                disabled={bag[p.id] >= 99}
+                                onClick={() => quantity(p.id, 1)}
+                              >
+                                <Plus size={14} />
+                              </button>
+                            </div>
+                          </div>
+                          <strong>{money(p.price * bag[p.id])}</strong>
+                        </div>
+                      ))}
+                  </div>
+                  <div className="subtotal">
+                    <span>Estimated subtotal</span>
+                    <strong>{money(total)}</strong>
+                  </div>
+                  <p className="form-note">
+                    This concept store does not accept payments or submit
+                    orders. Save your selection as a request draft. Delivery and
+                    availability need bakery confirmation.
+                  </p>
+                  <button className="button dark wide" onClick={download}>
+                    Download request summary <ArrowDown size={17} />
+                  </button>
+                </>
+              ) : (
+                <div className="empty-bag">
+                  <ShoppingBag size={40} strokeWidth={1} />
+                  <h3>A little room for something sweet.</h3>
+                  <button
+                    className="button dark"
+                    onClick={() => {
+                      setModal(null);
+                      document.getElementById("collection").scrollIntoView();
+                    }}
+                  >
+                    Explore the collection <ArrowUpRight size={16} />
+                  </button>
+                </div>
+              )}
+            </>
+          ) : modal === "custom" ? (
+            request ? (
+              <div className="request-ready">
+                <Check size={35} />
+                <h3>Your cake brief is ready.</h3>
+                <p>
+                  Download your brief to share with a bakery. Nothing has been
+                  submitted and no order is confirmed.
+                </p>
+                <button className="button dark wide" onClick={download}>
+                  Download your cake brief <ArrowDown size={17} />
+                </button>
+                <button
+                  className="text-button"
+                  onClick={() => setRequest(null)}
+                >
+                  Start a new brief
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setRequest(Object.fromEntries(new FormData(e.currentTarget)));
+                }}
+              >
+                <p>
+                  Tell us what you're celebrating. Create a personal brief you
+                  can save and share.
+                </p>
+                <label>
+                  Your name
+                  <input
+                    name="Name"
+                    required
+                    autoComplete="name"
+                    maxLength={100}
+                  />
+                </label>
+                <div className="form-row">
+                  <label>
+                    Occasion
+                    <select name="Occasion">
+                      <option>Birthday</option>
+                      <option>Anniversary</option>
+                      <option>Wedding</option>
+                      <option>Just because</option>
+                    </select>
+                  </label>
+                  <label>
+                    Preferred date
+                    <input
+                      type="date"
+                      name="Date"
+                      min={new Date(
+                        Date.now() - new Date().getTimezoneOffset() * 60000,
+                      )
+                        .toISOString()
+                        .slice(0, 10)}
+                      required
+                    />
+                  </label>
+                </div>
+                <div className="form-row">
+                  <label>
+                    Flavour
+                    <select name="Flavour">
+                      <option>Dark chocolate</option>
+                      <option>Vanilla & berries</option>
+                      <option>Salted caramel</option>
+                    </select>
+                  </label>
+                  <label>
+                    Servings
+                    <select name="Servings">
+                      <option>6–8 guests</option>
+                      <option>10–14 guests</option>
+                      <option>18–24 guests</option>
+                    </select>
+                  </label>
+                </div>
+                <label>
+                  A little inspiration
+                  <textarea
+                    name="Notes"
+                    placeholder="Colours, cake message, dietary needs…"
+                    maxLength={1200}
+                    rows={3}
+                  />
+                </label>
+                <p className="form-note">
+                  Your details stay in this browser session. This creates a
+                  downloadable brief; it does not submit a booking.
+                </p>
+                <button className="button dark wide" type="submit">
+                  Create my cake brief <ArrowUpRight size={17} />
+                </button>
+              </form>
+            )
+          ) : modal === "allergens" ? (
+            <div className="info-copy">
+              <p>
+                The illustrative menu includes wheat, milk, eggs, soy and
+                potential tree nuts. Images may show garnishes that differ from
+                a final product.
+              </p>
+              <p>
+                Recipe-specific allergen information has not been verified.
+                Please confirm ingredients and cross-contact risks with your
+                bakery before ordering. No item is represented as allergy-safe,
+                gluten-free or vegan.
+              </p>
+            </div>
+          ) : (
+            <div className="info-copy">
+              <p>
+                Browse the collection, add favourites to your bag and download a
+                request summary. For a custom celebration, create a cake brief
+                with your preferred date, flavour and serving size.
+              </p>
+              <p>
+                This concept storefront has no connected bakery fulfilment or
+                payment service. Delivery areas, lead times, charges and
+                availability must be confirmed before launch.
+              </p>
+            </div>
+          )}
+        </Modal>
+      )}
+    </>
+  );
+}
+export default App;
