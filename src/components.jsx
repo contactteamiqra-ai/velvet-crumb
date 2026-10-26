@@ -30,11 +30,13 @@ export function Modal({ title, onClose, children }) {
   const titleId = useId();
   useEffect(() => {
     const old = document.activeElement;
-    ref.current.showModal();
+    const dialog = ref.current;
+    dialog.showModal();
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = overflow;
+      dialog.close();
       old?.focus();
     };
   }, []);
